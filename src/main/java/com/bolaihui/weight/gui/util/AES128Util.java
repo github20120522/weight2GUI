@@ -51,7 +51,11 @@ public class AES128Util {
 
     public static SecretKeySpec getAESSecretKey(String base64KeyWord) throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
-        keyGen.init(BITS, new SecureRandom(Base64.decodeBase64(base64KeyWord)));
+        // 防止linux下 随机生成key
+        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        secureRandom.setSeed(Base64.decodeBase64(base64KeyWord));
+        // 根据密钥初始化密钥生成器
+        keyGen.init(BITS, secureRandom);
         SecretKey secretKey = keyGen.generateKey();
         SecretKeySpec key = new SecretKeySpec(secretKey.getEncoded(), ALGORITHM);
         return key;

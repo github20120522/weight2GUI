@@ -36,7 +36,10 @@ public class WaitOutListItem extends JLabel implements ListCellRenderer{
         if(isSelected){
             background = Color.ORANGE;
         }
-        String content = (index + 1) + ")" + "运单号：" + outData.getEmsNo() + " | " + outData.getStatus();
+        if (outData.getEmsNo().startsWith("#")) {
+            background = Color.BLUE;
+        }
+        String content = (index + 1) + ")" + "运单号：" + outData.getEmsNo().replace("#", "") + " | " + outData.getStatus();
         if (StringUtils.isNotBlank(outData.getOperateTime())) {
             content += " | " + outData.getOperateTime();
         }

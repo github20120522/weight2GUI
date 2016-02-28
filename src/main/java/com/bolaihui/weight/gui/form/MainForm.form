@@ -8,7 +8,7 @@
     <properties>
       <maximumSize width="-1" height="-1"/>
       <minimumSize width="-1" height="-1"/>
-      <preferredSize width="1200" height="650"/>
+      <preferredSize width="1200" height="670"/>
     </properties>
     <border type="none">
       <font/>
@@ -70,7 +70,7 @@
                       </component>
                     </children>
                   </grid>
-                  <grid id="beb9" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="beb9" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
@@ -78,10 +78,10 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <grid id="e2d9" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="e2d9" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false">
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false">
                             <preferred-size width="-1" height="400"/>
                           </grid>
                         </constraints>
@@ -91,7 +91,7 @@
                           <grid id="22ab3" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                                 <preferred-size width="76" height="133"/>
                               </grid>
                             </constraints>
@@ -123,7 +123,7 @@
                           <grid id="f36e" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                                 <preferred-size width="-1" height="200"/>
                               </grid>
                             </constraints>
@@ -174,28 +174,43 @@
                               </grid>
                             </children>
                           </grid>
+                          <grid id="73b91" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none"/>
+                            <children>
+                              <component id="6739" class="javax.swing.JButton" binding="weightBeginBtn">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <text value="开始称重"/>
+                                </properties>
+                              </component>
+                              <component id="1fa75" class="javax.swing.JButton" binding="weightEndBtn">
+                                <constraints>
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <text value="结束称重"/>
+                                </properties>
+                              </component>
+                            </children>
+                          </grid>
                         </children>
                       </grid>
-                      <grid id="b373b" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="b373b" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
-                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties/>
                         <border type="none"/>
                         <children>
                           <component id="19306" class="javax.swing.JTextField" binding="emsNoText">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                                <preferred-size width="150" height="30"/>
-                              </grid>
-                            </constraints>
-                            <properties>
-                              <font size="16" style="1"/>
-                              <foreground color="-12106768"/>
-                            </properties>
-                          </component>
-                          <component id="a94c8" class="javax.swing.JTextField" binding="boxNoText">
                             <constraints>
                               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                 <preferred-size width="150" height="30"/>
@@ -206,9 +221,20 @@
                               <foreground color="-12106768"/>
                             </properties>
                           </component>
+                          <component id="a94c8" class="javax.swing.JTextField" binding="boxNoText">
+                            <constraints>
+                              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                                <preferred-size width="150" height="30"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <font size="16" style="1"/>
+                              <foreground color="-12106768"/>
+                            </properties>
+                          </component>
                           <component id="3814a" class="javax.swing.JButton" binding="enableBoxNoBtn">
                             <constraints>
-                              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <text value="扫纸箱条形码"/>
@@ -216,7 +242,7 @@
                           </component>
                           <component id="e65d8" class="javax.swing.JButton" binding="disableBoxNoBtn">
                             <constraints>
-                              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <text value="不扫纸箱条形码"/>
@@ -224,7 +250,7 @@
                           </component>
                           <component id="e072c" class="javax.swing.JLabel">
                             <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <text value="运单号扫描"/>
@@ -232,10 +258,30 @@
                           </component>
                           <component id="e8af1" class="javax.swing.JLabel">
                             <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                             </constraints>
                             <properties>
                               <text value="纸箱条形码"/>
+                            </properties>
+                          </component>
+                          <component id="3f552" class="javax.swing.JLabel">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <text value="运单号长度"/>
+                            </properties>
+                          </component>
+                          <component id="d4d1e" class="javax.swing.JTextField" binding="emsNoLen">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                                <preferred-size width="150" height="30"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <font size="16" style="3"/>
+                              <foreground color="-12106768"/>
+                              <text value="12"/>
                             </properties>
                           </component>
                         </children>
@@ -304,7 +350,7 @@
                   </grid>
                 </children>
               </grid>
-              <grid id="4d9f0" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="4d9f0" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="30" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false">
@@ -320,7 +366,9 @@
                         <preferred-size width="-1" height="575"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <horizontalScrollBarPolicy value="32"/>
+                    </properties>
                     <border type="none" title="【今日】称重记录"/>
                     <children>
                       <component id="55995" class="javax.swing.JList" binding="weightList">
@@ -328,6 +376,23 @@
                         <properties>
                           <model/>
                         </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <scrollpane id="ea5f8">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <preferred-size width="-1" height="150"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <horizontalScrollBarPolicy value="32"/>
+                    </properties>
+                    <border type="none" title="重复称重"/>
+                    <children>
+                      <component id="7fe92" class="javax.swing.JList" binding="dupWeightList">
+                        <constraints/>
+                        <properties/>
                       </component>
                     </children>
                   </scrollpane>
@@ -343,7 +408,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="3b7c7" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+              <grid id="3b7c7" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -356,7 +421,7 @@
                   <grid id="c99fb" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>
@@ -400,7 +465,7 @@
                         <properties>
                           <font size="26"/>
                           <foreground color="-15219924"/>
-                          <text value="扫描已放行0"/>
+                          <text value="已扫描已放行0"/>
                         </properties>
                       </component>
                       <component id="3c0db" class="javax.swing.JLabel" binding="scanNLabel">
@@ -410,7 +475,7 @@
                         <properties>
                           <font size="26"/>
                           <foreground color="-53215"/>
-                          <text value="扫描未放行0"/>
+                          <text value="已扫描未放行0"/>
                         </properties>
                       </component>
                     </children>
@@ -418,7 +483,7 @@
                   <grid id="f7049" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                         <preferred-size width="-1" height="100"/>
                       </grid>
                     </constraints>
@@ -454,26 +519,80 @@
                       </component>
                     </children>
                   </grid>
+                  <grid id="8c9a2" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="53d7f" class="javax.swing.JButton" binding="scanBeginBtn">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="开始扫描"/>
+                        </properties>
+                      </component>
+                      <component id="9dec8" class="javax.swing.JButton" binding="scanEndBtn">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="结束扫描"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
                 </children>
               </grid>
-              <scrollpane id="c2a0">
+              <grid id="7ddef" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties>
-                  <toolTipText value=""/>
-                </properties>
-                <border type="none" title="【今日】扫描数据"/>
+                <properties/>
+                <border type="none"/>
                 <children>
-                  <component id="f7850" class="javax.swing.JList" binding="scanList">
-                    <constraints/>
+                  <scrollpane id="c2a0">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
                     <properties>
-                      <model/>
+                      <horizontalScrollBarPolicy value="32"/>
                       <toolTipText value=""/>
                     </properties>
-                  </component>
+                    <border type="none" title="【今日】扫描数据"/>
+                    <children>
+                      <component id="f7850" class="javax.swing.JList" binding="scanList">
+                        <constraints/>
+                        <properties>
+                          <model/>
+                          <toolTipText value=""/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <scrollpane id="189a">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <preferred-size width="-1" height="150"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <horizontalScrollBarPolicy value="32"/>
+                    </properties>
+                    <border type="none" title="重复扫描检测"/>
+                    <children>
+                      <component id="dd04e" class="javax.swing.JList" binding="dupScanList">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
                 </children>
-              </scrollpane>
+              </grid>
             </children>
           </grid>
         </children>

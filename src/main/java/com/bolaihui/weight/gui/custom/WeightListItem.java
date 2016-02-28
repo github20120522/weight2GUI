@@ -35,7 +35,10 @@ public class WeightListItem extends JLabel implements ListCellRenderer{
         if(isSelected){
             background = Color.ORANGE;
         }
-        setText((index + 1) + ")" + "运单号：" + weight.getEmsNo() + " | " + "重量：" + weight.getWeight() + " | " + weight.getStatus() + " | " + weight.getBoxNo() + " | " + weight.getOperateTime());
+        if (weight.getEmsNo().startsWith("#")) {
+            background = Color.BLUE;
+        }
+        setText((index + 1) + ")" + "运单号：" + weight.getEmsNo().replace("#", "") + " | " + "重量：" + weight.getWeight() + " | " + weight.getStatus() + " | " + weight.getBoxNo() + " | " + weight.getOperateTime());
         setBackground(background);
         setForeground(foreground);
         setFont(font);

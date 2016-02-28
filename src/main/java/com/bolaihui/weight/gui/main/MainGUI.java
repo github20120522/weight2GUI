@@ -21,7 +21,7 @@ public class MainGUI {
 
         frame.setContentPane(mainPanel.getMainPanel());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocation(80, 25);
+        frame.setLocation(80, 15);
         frame.setResizable(false);
         frame.pack();
         frame.setVisible(true);

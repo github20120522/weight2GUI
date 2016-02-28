@@ -10,12 +10,10 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by fz on 2016/1/4.
@@ -29,8 +27,6 @@ public class WeightService implements SerialPortEventListener, Runnable {
     private CommPortIdentifier commPort;
 
     private SerialPort serialPort;
-
-    Pattern p = Pattern.compile("\\d+\\.\\d+");
 
     private WeightContext weightContext = WeightContext.getInstance();
 
@@ -90,6 +86,7 @@ public class WeightService implements SerialPortEventListener, Runnable {
         if (serialPort != null) {
             serialPort.close();
         }
+        weightContext.setConnected(false);
     }
 
     private void okConnect() {
@@ -111,6 +108,8 @@ public class WeightService implements SerialPortEventListener, Runnable {
             weightContext.getUiComponent("enableBoxNoBtn").setEnabled(true);
             weightContext.getUiComponent("disableBoxNoBtn").setEnabled(false);
         }
+
+        weightContext.setConnected(true);
     }
 
     @Override
@@ -125,18 +124,25 @@ public class WeightService implements SerialPortEventListener, Runnable {
                 break;
             case SerialPortEvent.OE:
                 /* Overrun error，溢位错误 */
+                break;
             case SerialPortEvent.FE:
                 /* Framing error，传帧错误 */
+                break;
             case SerialPortEvent.PE:
                 /* Parity error，校验错误 */
+                break;
             case SerialPortEvent.CD:
                 /* Carrier detect，载波检测 */
+                break;
             case SerialPortEvent.CTS:
                 /* Clear to send，清除发送 */
+                break;
             case SerialPortEvent.DSR:
                 /* Data set ready，数据设备就绪 */
+                break;
             case SerialPortEvent.RI:
                 /* Ring indicator，响铃指示 */
+                break;
             case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
                 /* Output buffer is empty，输出缓冲区清空 */
                 break;
@@ -150,39 +156,57 @@ public class WeightService implements SerialPortEventListener, Runnable {
                     // done 关闭连接
                     closeConnect();
                 }
+                break;
         }
     }
 
     /* 处理串口数据 */
     private void dataProcess() throws Exception {
 
+        Thread.sleep(5);
         // 等待完整的称重数据
-        Thread.sleep(100);
         byte[] readBuffer = new byte[1024];
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        while (inputStream.available() > 0) {
-            int len = inputStream.read(readBuffer);
-            bytes.write(readBuffer, 0, len);
+        if (inputStream.available() >= 18) {
+            while (inputStream.available() > 0) {
+                inputStream.read(readBuffer);
+                if (readBuffer.length >= 18) {
+                    break;
+                }
+            }
+        } else {
+            return;
         }
-        String readStr = new String(bytes.toByteArray());
-        Matcher m = p.matcher(readStr);
-        if (m.find()) {
-            String weightValue = m.group();
+
+        byte[] readBytes = new byte[18];
+        System.arraycopy(readBuffer, 0, readBytes, 0, 18);
+        byte[] weightBytes = new byte[8];
+        byte[] unitBytes = new byte[2];
+
+        if (readBytes.length == 18) {
+
+            System.arraycopy(readBytes, 6, weightBytes, 0, 8);
+            System.arraycopy(readBytes, 14, unitBytes, 0, 2);
+            String weightStr = new String(weightBytes);
+            String unitStr = new String(unitBytes);
+
             // done 显示称重重量
-            showWeight(weightValue, readStr.contains("kg"));
+            showWeight(weightStr, unitStr);
         }
+
     }
 
     /* 显示称重信息 */
-    private void showWeight(String weightValue, boolean isKg) throws IOException {
+    private void showWeight(String weightValue, String unitStr) throws IOException {
+
         // done 显示当前重量
-        double weight = Double.parseDouble(weightValue.trim());
-        if (!isKg) {
-            weight = weight / 1000;
+        BigDecimal weight = new BigDecimal(weightValue.replace("+", "").replace("-", "").trim());
+        if (StringUtils.equals("g", unitStr.trim())) {
+            weight = weight.divide(new BigDecimal(1000));
         }
+        weight = weight.setScale(4, BigDecimal.ROUND_HALF_UP);
         ((JLabel) weightContext.getUiComponent("weightLabel")).setText(weight + "kg");
         // done 尝试称重
-        weightContext.do4weight();
+        // weightContext.do4weight();
     }
 
 }

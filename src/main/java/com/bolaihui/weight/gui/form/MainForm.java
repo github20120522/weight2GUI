@@ -57,6 +57,13 @@ public class MainForm {
     private JLabel scanBlock;
     private JLabel scanYLabel;
     private JLabel scanNLabel;
+    private JButton weightBeginBtn;
+    private JButton weightEndBtn;
+    private JButton scanBeginBtn;
+    private JButton scanEndBtn;
+    private JList dupWeightList;
+    private JList dupScanList;
+    private JTextField emsNoLen;
 
     private static final Logger logger = LoggerFactory.getLogger(MainForm.class);
 
@@ -67,19 +74,32 @@ public class MainForm {
         initContext();
         initListeners();
         SwingUtilities.invokeLater(() -> {
+            // 定时刷新放行数据（300s刷新一次）
+            new Timer().schedule(new TimerTask() {
+                public void run() {
+                    try {
+                        weightContext.refreshDownloadOutData();
+                    } catch (Exception e) {
+                        logger.error(BaseUtil.getExceptionStackTrace(e));
+                        e.printStackTrace();
+                    }
+                }
+            }, 100, 300 * 1000);
+            // 定时检测电子秤连接（5s刷新一次）
+            new Timer().schedule(new TimerTask() {
+                public void run() {
+                    try {
+                        if (!weightContext.isConnected()) {
+                            SwingUtilities.invokeLater(new WeightService());
+                        }
+                    } catch (Exception e) {
+                        logger.error(BaseUtil.getExceptionStackTrace(e));
+                        e.printStackTrace();
+                    }
+                }
+            }, 100, 5 * 1000);
             userName.requestFocus();
         });
-        // 定时刷新放行数据（300s刷新一次）
-        new Timer().schedule(new TimerTask() {
-            public void run() {
-                try {
-                    weightContext.refreshDownloadOutData();
-                } catch (Exception e) {
-                    logger.error(BaseUtil.getExceptionStackTrace(e));
-                    e.printStackTrace();
-                }
-            }
-        }, 100, 300 * 1000);
     }
 
     private void initContext(){
@@ -119,9 +139,19 @@ public class MainForm {
 
         weightContext.putUiComponent("refreshTime", refreshTime);
 
+        weightContext.putUiComponent("dupWeightList", dupWeightList);
+        weightContext.putUiComponent("dupScanList", dupScanList);
+
+        weightContext.putUiComponent("weightBeginBtn", weightBeginBtn);
+        weightContext.putUiComponent("scanBeginBtn", scanBeginBtn);
+
+        weightContext.putUiComponent("emsNoLen", emsNoLen);
+
         weightList.setCellRenderer(new WeightListItem());
         downloadList.setCellRenderer(new WaitOutListItem());
         scanList.setCellRenderer(new WaitOutListItem());
+        dupWeightList.setCellRenderer(new WeightListItem());
+        dupScanList.setCellRenderer(new WaitOutListItem());
 
         // done 读取本地今日称重数据
         Date today = new Date();
@@ -160,10 +190,16 @@ public class MainForm {
 
         downloadList.setListData(weightContext.getWaitOutListData());
 
+        dupWeightList.setListData(weightContext.getDupWeightList());
+
+        dupScanList.setListData(weightContext.getDupScanList());
+
         emsNoText.setEnabled(false);
         boxNoText.setEnabled(false);
         enableBoxNoBtn.setEnabled(false);
         disableBoxNoBtn.setEnabled(false);
+        weightEndBtn.setEnabled(false);
+        scanEndBtn.setEnabled(false);
     }
 
     private void initListeners(){
@@ -253,7 +289,6 @@ public class MainForm {
         downloadDataBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
                 weightContext.refreshDownloadOutData();
             }
         });
@@ -295,6 +330,13 @@ public class MainForm {
 
                     // 运单号没有填写
                     if (StringUtils.isBlank(emsNoText.getText())) {
+                        emsNoText.requestFocus();
+                        return;
+                    }
+
+                    // 运单号位数不对，则清空输入项
+                    if (emsNoText.getText().length() != Integer.parseInt(emsNoLen.getText())) {
+                        emsNoText.setText("");
                         emsNoText.requestFocus();
                         return;
                     }
@@ -361,6 +403,13 @@ public class MainForm {
                         return;
                     }
 
+                    // 运单号位数不对，则清空输入项
+                    if (scanEmsNo.getText().length() != Integer.parseInt(emsNoLen.getText())) {
+                        scanEmsNo.setText("");
+                        scanEmsNo.requestFocus();
+                        return;
+                    }
+
                     // 反馈扫描结果
                     try {
                         weightContext.scanEmsNoStatus();
@@ -376,46 +425,25 @@ public class MainForm {
         syncBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                syncBtn.setText("正在同步");
-                syncBtn.setEnabled(false);
-                SwingUtilities.invokeLater(() -> {
-                    Map<String, Object> result = new HashMap<>();
-                    try {
-                        // done 扫描只留放行并去重
-                        Set<OutData> outDataSet = new HashSet<>();
-                        Set<String> outDataEmsNos = new HashSet<>();
-                        for (OutData outData : weightContext.getScanDataList()) {
-                            if (StringUtils.equals(Constants.successStatus, outData.getStatus())) {
-                                if (!outDataEmsNos.contains(outData.getEmsNo())) {
-                                    outDataEmsNos.add(outData.getEmsNo());
-                                    outDataSet.add(outData);
-                                }
-                            }
-                        }
-                        // done 称重记录取倒叙，以最后一次称重的重量为准
-                        List<Weight> weightList = new ArrayList<>();
-                        for (Weight weight : weightContext.getListData()) {
-                            weight.setWeight(weight.getWeight().replace("kg", ""));
-                            weightList.add(0, weight);
-                        }
-                        String weightJson = BaseUtil.toJson(weightList);
-                        String outDataJson = BaseUtil.toJson(outDataSet);
-                        weightContext.syncData(weightJson, outDataJson);
-                    } catch (Exception ex) {
-                        logger.error(BaseUtil.getExceptionStackTrace(ex));
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, ex.toString());
-                    } finally {
-                        syncBtn.setText("同步数据");
-                        syncBtn.setEnabled(true);
-                    }
-                });
+                // 权限检查
+                if (!weightContext.isLogin()) {
+                    JOptionPane.showMessageDialog(null, "请先登录");
+                    weightContext.getUiComponent("userName").requestFocus();
+                    return;
+                }
+                weightContext.syncTrigger();
             }
         });
 
         exportOutDataBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                // 权限检查
+                if (!weightContext.isLogin()) {
+                    JOptionPane.showMessageDialog(null, "请先登录");
+                    weightContext.getUiComponent("userName").requestFocus();
+                    return;
+                }
                 exportOutDataBtn.setText("正在下载");
                 exportOutDataBtn.setEnabled(false);
                 SwingUtilities.invokeLater(() -> {
@@ -423,6 +451,82 @@ public class MainForm {
                     exportOutDataBtn.setText("出区数据导出");
                     exportOutDataBtn.setEnabled(true);
                 });
+            }
+        });
+
+        weightBeginBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // 权限检查
+                if (!weightContext.isLogin()) {
+                    JOptionPane.showMessageDialog(null, "请先登录");
+                    weightContext.getUiComponent("userName").requestFocus();
+                    return;
+                }
+                weightBeginBtn.setEnabled(false);
+                weightEndBtn.setEnabled(true);
+                weightContext.getWeightYSet().clear();
+                weightContext.getWeightNSet().clear();
+                weightContext.getDupWeightList().clear();
+                weightContext.getDupScanMap().clear();
+                ((JList) weightContext.getUiComponent("dupWeightList")).updateUI();
+                JLabel weightYLabel = (JLabel) weightContext.getUiComponent("weightYLabel");
+                weightYLabel.setText("已称重已放行" + weightContext.getWeightYSet().size());
+                JLabel weightNLabel = (JLabel) weightContext.getUiComponent("weightNLabel");
+                weightNLabel.setText("已称重未放行" + weightContext.getWeightNSet().size());
+            }
+        });
+
+        weightEndBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // 权限检查
+                if (!weightContext.isLogin()) {
+                    JOptionPane.showMessageDialog(null, "请先登录");
+                    weightContext.getUiComponent("userName").requestFocus();
+                    return;
+                }
+                weightBeginBtn.setEnabled(true);
+                weightEndBtn.setEnabled(false);
+                weightContext.syncTrigger();
+            }
+        });
+
+        scanBeginBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // 权限检查
+                if (!weightContext.isLogin()) {
+                    JOptionPane.showMessageDialog(null, "请先登录");
+                    weightContext.getUiComponent("userName").requestFocus();
+                    return;
+                }
+                scanBeginBtn.setEnabled(false);
+                scanEndBtn.setEnabled(true);
+                weightContext.getScanYSet().clear();
+                weightContext.getScanNSet().clear();
+                weightContext.getDupScanList().clear();
+                weightContext.getDupScanMap().clear();
+                ((JList) weightContext.getUiComponent("dupScanList")).updateUI();
+                JLabel scanYLabel = (JLabel) weightContext.getUiComponent("scanYLabel");
+                scanYLabel.setText("已扫描已放行" + weightContext.getScanYSet().size());
+                JLabel scanNLabel = (JLabel) weightContext.getUiComponent("scanNLabel");
+                scanNLabel.setText("已扫描未放行" + weightContext.getScanNSet().size());
+            }
+        });
+
+        scanEndBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // 权限检查
+                if (!weightContext.isLogin()) {
+                    JOptionPane.showMessageDialog(null, "请先登录");
+                    weightContext.getUiComponent("userName").requestFocus();
+                    return;
+                }
+                scanBeginBtn.setEnabled(true);
+                scanEndBtn.setEnabled(false);
+                weightContext.syncTrigger();
             }
         });
     }

@@ -507,9 +507,16 @@ public class WeightContext {
             try {
                 // done 扫描只留放行并去重
                 Set<OutData> outDataSet = new HashSet<>();
-                Set<OutData> notOutDataSet = new HashSet<>();
                 Set<String> outDataEmsNos = new HashSet<>();
+
+                // 去重，去放行后的未放行运单
+                Set<OutData> notOutDataSet = new HashSet<>();
                 Set<String> notOutDataEmsNos = new HashSet<>();
+
+                // 所有未放行数据，可能含有已放行
+                List<OutData> notOutDataList = new ArrayList<>();
+
+                // 去重放行数据
                 for (OutData outData : weightContext.getScanDataList()) {
                     if (StringUtils.equals(Constants.successStatus, outData.getStatus())) {
                         if (!outDataEmsNos.contains(outData.getEmsNo().replace("#", ""))) {
@@ -518,13 +525,20 @@ public class WeightContext {
                             outDataSet.add(outData);
                         }
                     } else {
-                        if (!notOutDataEmsNos.contains(outData.getEmsNo().replace("#", ""))) {
-                            notOutDataEmsNos.add(outData.getEmsNo().replace("#", ""));
-                            outData.setEmsNo(outData.getEmsNo().replace("#", ""));
-                            notOutDataSet.add(outData);
-                        }
+                        notOutDataList.add(outData);
                     }
                 }
+
+                // 找出不在放行数据中的未放行数据
+                for (OutData outData : notOutDataList) {
+                    if (!notOutDataEmsNos.contains(outData.getEmsNo().replace("#", ""))
+                            && !outDataEmsNos.contains(outData.getEmsNo().replace("#", ""))) {
+                        notOutDataEmsNos.add(outData.getEmsNo().replace("#", ""));
+                        outData.setEmsNo(outData.getEmsNo().replace("#", ""));
+                        notOutDataSet.add(outData);
+                    }
+                }
+
                 // done 称重记录取倒叙，以最后一次称重的重量为准
                 List<Weight> weightList = new ArrayList<>();
                 for (Weight weight : weightContext.getListData()) {

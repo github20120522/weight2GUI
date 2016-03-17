@@ -539,13 +539,17 @@ public class WeightContext {
                     }
                 }
 
-                // done 称重记录取倒叙，以最后一次称重的重量为准
-                List<Weight> weightList = new ArrayList<>();
+                // done 去重重量数据，以最后一次称重的重量为准
+                Set<String> weightEmsNos = new HashSet<>();
+                Set<Weight> weightSet = new HashSet<>();
                 for (Weight weight : weightContext.getListData()) {
-                    weight.setWeight(weight.getWeight().replace("kg", ""));
-                    weightList.add(0, weight);
+                    if (!weightEmsNos.contains(weight.getEmsNo().replace("#", ""))) {
+                        weightEmsNos.add(weight.getEmsNo().replace("#", ""));
+                        weightSet.add(weight);
+                    }
                 }
-                String weightJson = BaseUtil.toJson(weightList);
+
+                String weightJson = BaseUtil.toJson(weightSet);
                 String outDataJson = BaseUtil.toJson(outDataSet);
                 String notOutDataJson = BaseUtil.toJson(notOutDataSet);
                 weightContext.syncData(weightJson, outDataJson, notOutDataJson);

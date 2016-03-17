@@ -545,6 +545,7 @@ public class WeightContext {
                 for (Weight weight : weightContext.getListData()) {
                     if (!weightEmsNos.contains(weight.getEmsNo().replace("#", ""))) {
                         weightEmsNos.add(weight.getEmsNo().replace("#", ""));
+                        weight.setWeight(weight.getWeight().replace("kg", ""));
                         weightSet.add(weight);
                     }
                 }

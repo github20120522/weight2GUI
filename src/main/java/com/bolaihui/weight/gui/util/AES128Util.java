@@ -49,7 +49,7 @@ public class AES128Util {
         }
     }
 
-    public static SecretKeySpec getAESSecretKey(String base64KeyWord) throws NoSuchAlgorithmException {
+    private static SecretKeySpec getAESSecretKey(String base64KeyWord) throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
         // 防止linux下 随机生成key
         SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
@@ -57,8 +57,7 @@ public class AES128Util {
         // 根据密钥初始化密钥生成器
         keyGen.init(BITS, secureRandom);
         SecretKey secretKey = keyGen.generateKey();
-        SecretKeySpec key = new SecretKeySpec(secretKey.getEncoded(), ALGORITHM);
-        return key;
+        return new SecretKeySpec(secretKey.getEncoded(), ALGORITHM);
     }
 
     public static void main(String[] args) throws UnsupportedEncodingException {

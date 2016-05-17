@@ -616,11 +616,26 @@ public class WeightContext {
 
                 String dupScanListJson = result.get("dupScanList").toString();
                 List dupScanList = BaseUtil.parseJson(AES128Util.decrypt(aesKey, dupScanListJson), List.class);
+
+                String warningMessageListJson = result.get("warningMessageList").toString();
+                List warningMessageList = BaseUtil.parseJson(AES128Util.decrypt(aesKey, warningMessageListJson), List.class);
+
                 String location = result.get("location").toString();
                 String content = "本次位置：" + location + "\n";
-                content += "---------------------------------------------\n";
+                content += "\n";
+
+                if (warningMessageList != null && warningMessageList.size() > 0) {
+                    content += "★★★〓〓发现退删单，请注意拣出〓〓★★★\n";
+                    for (int i=0; i<warningMessageList.size(); i++) {
+                        String warningMessage = warningMessageList.get(i).toString();
+                        content += warningMessage + "\n";
+                    }
+                }
+
+                content += "\n";
+
                 if (dupScanList != null && dupScanList.size() > 0) {
-                    content += "----------------------发现重复扫描----------------------\n";
+                    content += "☆☆☆==发现重复扫描==☆☆☆\n";
                     for(int i=0; i<dupScanList.size(); i++) {
                         Map dupScan = (Map) dupScanList.get(i);
                         String emsNo = dupScan.get("dupEmsNo").toString();
@@ -635,6 +650,7 @@ public class WeightContext {
                         content += "\n";
                     }
                 }
+
                 textAreaDialog("完成信息", content);
             } else {
                 JOptionPane.showMessageDialog(null, result.get("message").toString());

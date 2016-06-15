@@ -7,7 +7,6 @@ import com.bolaihui.weight.gui.po.OutData;
 import com.bolaihui.weight.gui.po.Weight;
 import com.bolaihui.weight.gui.service.WeightService;
 import com.bolaihui.weight.gui.util.BaseUtil;
-import com.bolaihui.weight.gui.util.Constants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -102,6 +101,7 @@ public class MainForm {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private void initContext(){
 
         weightContext.putUiComponent("mainForm", mainPanel);
@@ -298,11 +298,10 @@ public class MainForm {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                Boolean b = true;
-                weightContext.setEnableBoxNo(b.toString());
-                enableBoxNoBtn.setEnabled(!b);
-                disableBoxNoBtn.setEnabled(b);
-                boxNoText.setEnabled(b);
+                weightContext.setEnableBoxNo(Boolean.TRUE.toString());
+                enableBoxNoBtn.setEnabled(!Boolean.TRUE);
+                disableBoxNoBtn.setEnabled(Boolean.TRUE);
+                boxNoText.setEnabled(Boolean.TRUE);
                 emsNoText.requestFocus();
             }
         });
@@ -312,12 +311,11 @@ public class MainForm {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                Boolean b = false;
-                weightContext.setEnableBoxNo(b.toString());
-                enableBoxNoBtn.setEnabled(!b);
-                disableBoxNoBtn.setEnabled(b);
+                weightContext.setEnableBoxNo(Boolean.FALSE.toString());
+                enableBoxNoBtn.setEnabled(!Boolean.FALSE);
+                disableBoxNoBtn.setEnabled(Boolean.FALSE);
                 boxNoText.setText("");
-                boxNoText.setEnabled(b);
+                boxNoText.setEnabled(Boolean.FALSE);
                 emsNoText.requestFocus();
             }
         });
@@ -465,15 +463,6 @@ public class MainForm {
                 }
                 weightBeginBtn.setEnabled(false);
                 weightEndBtn.setEnabled(true);
-                weightContext.getWeightYSet().clear();
-                weightContext.getWeightNSet().clear();
-                weightContext.getDupWeightList().clear();
-                weightContext.getDupScanMap().clear();
-                ((JList) weightContext.getUiComponent("dupWeightList")).updateUI();
-                JLabel weightYLabel = (JLabel) weightContext.getUiComponent("weightYLabel");
-                weightYLabel.setText("已称重已放行" + weightContext.getWeightYSet().size());
-                JLabel weightNLabel = (JLabel) weightContext.getUiComponent("weightNLabel");
-                weightNLabel.setText("已称重未放行" + weightContext.getWeightNSet().size());
             }
         });
 
@@ -488,6 +477,12 @@ public class MainForm {
                 }
                 weightBeginBtn.setEnabled(true);
                 weightEndBtn.setEnabled(false);
+                weightReset();
+                // begin 称重放行结束的同时也将扫描放行处的数据给重置
+                scanBeginBtn.setEnabled(true);
+                scanEndBtn.setEnabled(false);
+                scanReset();
+                // end 称重放行结束的同时也将扫描放行处的数据给重置
                 weightContext.syncTrigger();
             }
         });
@@ -503,15 +498,6 @@ public class MainForm {
                 }
                 scanBeginBtn.setEnabled(false);
                 scanEndBtn.setEnabled(true);
-                weightContext.getScanYSet().clear();
-                weightContext.getScanNSet().clear();
-                weightContext.getDupScanList().clear();
-                weightContext.getDupScanMap().clear();
-                ((JList) weightContext.getUiComponent("dupScanList")).updateUI();
-                JLabel scanYLabel = (JLabel) weightContext.getUiComponent("scanYLabel");
-                scanYLabel.setText("已扫描已放行" + weightContext.getScanYSet().size());
-                JLabel scanNLabel = (JLabel) weightContext.getUiComponent("scanNLabel");
-                scanNLabel.setText("已扫描未放行" + weightContext.getScanNSet().size());
             }
         });
 
@@ -526,9 +512,34 @@ public class MainForm {
                 }
                 scanBeginBtn.setEnabled(true);
                 scanEndBtn.setEnabled(false);
+                scanReset();
                 weightContext.syncTrigger();
             }
         });
+    }
+
+    private void weightReset() {
+        weightContext.getWeightYSet().clear();
+        weightContext.getWeightNSet().clear();
+        weightContext.getDupWeightList().clear();
+        weightContext.getDupScanMap().clear();
+        ((JList) weightContext.getUiComponent("dupWeightList")).updateUI();
+        JLabel weightYLabel = (JLabel) weightContext.getUiComponent("weightYLabel");
+        weightYLabel.setText("已称重已放行" + weightContext.getWeightYSet().size());
+        JLabel weightNLabel = (JLabel) weightContext.getUiComponent("weightNLabel");
+        weightNLabel.setText("已称重未放行" + weightContext.getWeightNSet().size());
+    }
+
+    private void scanReset() {
+        weightContext.getScanYSet().clear();
+        weightContext.getScanNSet().clear();
+        weightContext.getDupScanList().clear();
+        weightContext.getDupScanMap().clear();
+        ((JList) weightContext.getUiComponent("dupScanList")).updateUI();
+        JLabel scanYLabel = (JLabel) weightContext.getUiComponent("scanYLabel");
+        scanYLabel.setText("已扫描已放行" + weightContext.getScanYSet().size());
+        JLabel scanNLabel = (JLabel) weightContext.getUiComponent("scanNLabel");
+        scanNLabel.setText("已扫描未放行" + weightContext.getScanNSet().size());
     }
 
     public JPanel getMainPanel() {

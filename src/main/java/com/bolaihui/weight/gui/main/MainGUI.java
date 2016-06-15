@@ -25,6 +25,6 @@ public class MainGUI {
         frame.setResizable(false);
         frame.pack();
         frame.setVisible(true);
-        frame.setTitle("自贸达称重程序");
+        frame.setTitle("称重程序");
     }
 }

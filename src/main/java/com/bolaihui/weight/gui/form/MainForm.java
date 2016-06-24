@@ -239,9 +239,11 @@ public class MainForm {
         connectBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                connectBtn.setText("正在连接电子秤...");
-                connectBtn.setEnabled(false);
-                SwingUtilities.invokeLater(new WeightService());
+                if (connectBtn.isEnabled()) {
+                    connectBtn.setText("正在连接电子秤...");
+                    connectBtn.setEnabled(false);
+                    SwingUtilities.invokeLater(new WeightService());
+                }
             }
         });
 
@@ -249,7 +251,9 @@ public class MainForm {
         loginBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                weightContext.tryToLogin();
+                if (loginBtn.isEnabled()) {
+                    weightContext.tryToLogin();
+                }
             }
         });
 
@@ -289,7 +293,9 @@ public class MainForm {
         downloadDataBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                weightContext.refreshDownloadOutData();
+                if (downloadDataBtn.isEnabled()) {
+                    weightContext.refreshDownloadOutData();
+                }
             }
         });
 
@@ -297,12 +303,13 @@ public class MainForm {
         enableBoxNoBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
-                weightContext.setEnableBoxNo(Boolean.TRUE.toString());
-                enableBoxNoBtn.setEnabled(!Boolean.TRUE);
-                disableBoxNoBtn.setEnabled(Boolean.TRUE);
-                boxNoText.setEnabled(Boolean.TRUE);
-                emsNoText.requestFocus();
+                if (enableBoxNoBtn.isEnabled()) {
+                    weightContext.setEnableBoxNo(Boolean.TRUE.toString());
+                    enableBoxNoBtn.setEnabled(!Boolean.TRUE);
+                    disableBoxNoBtn.setEnabled(Boolean.TRUE);
+                    boxNoText.setEnabled(Boolean.TRUE);
+                    emsNoText.requestFocus();
+                }
             }
         });
 
@@ -310,13 +317,14 @@ public class MainForm {
         disableBoxNoBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
-                weightContext.setEnableBoxNo(Boolean.FALSE.toString());
-                enableBoxNoBtn.setEnabled(!Boolean.FALSE);
-                disableBoxNoBtn.setEnabled(Boolean.FALSE);
-                boxNoText.setText("");
-                boxNoText.setEnabled(Boolean.FALSE);
-                emsNoText.requestFocus();
+                if (disableBoxNoBtn.isEnabled()) {
+                    weightContext.setEnableBoxNo(Boolean.FALSE.toString());
+                    enableBoxNoBtn.setEnabled(!Boolean.FALSE);
+                    disableBoxNoBtn.setEnabled(Boolean.FALSE);
+                    boxNoText.setText("");
+                    boxNoText.setEnabled(Boolean.FALSE);
+                    emsNoText.requestFocus();
+                }
             }
         });
 
@@ -423,97 +431,109 @@ public class MainForm {
         syncBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // 权限检查
-                if (!weightContext.isLogin()) {
-                    JOptionPane.showMessageDialog(null, "请先登录");
-                    weightContext.getUiComponent("userName").requestFocus();
-                    return;
+                if (syncBtn.isEnabled()) {
+                    // 权限检查
+                    if (!weightContext.isLogin()) {
+                        JOptionPane.showMessageDialog(null, "请先登录");
+                        weightContext.getUiComponent("userName").requestFocus();
+                        return;
+                    }
+                    weightContext.syncTrigger();
                 }
-                weightContext.syncTrigger();
             }
         });
 
         exportOutDataBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // 权限检查
-                if (!weightContext.isLogin()) {
-                    JOptionPane.showMessageDialog(null, "请先登录");
-                    weightContext.getUiComponent("userName").requestFocus();
-                    return;
+                if (exportOutDataBtn.isEnabled()) {
+                    // 权限检查
+                    if (!weightContext.isLogin()) {
+                        JOptionPane.showMessageDialog(null, "请先登录");
+                        weightContext.getUiComponent("userName").requestFocus();
+                        return;
+                    }
+                    exportOutDataBtn.setText("正在下载");
+                    exportOutDataBtn.setEnabled(false);
+                    SwingUtilities.invokeLater(() -> {
+                        weightContext.exportReleaseData();
+                        exportOutDataBtn.setText("出区数据导出");
+                        exportOutDataBtn.setEnabled(true);
+                    });
                 }
-                exportOutDataBtn.setText("正在下载");
-                exportOutDataBtn.setEnabled(false);
-                SwingUtilities.invokeLater(() -> {
-                    weightContext.exportReleaseData();
-                    exportOutDataBtn.setText("出区数据导出");
-                    exportOutDataBtn.setEnabled(true);
-                });
             }
         });
 
         weightBeginBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // 权限检查
-                if (!weightContext.isLogin()) {
-                    JOptionPane.showMessageDialog(null, "请先登录");
-                    weightContext.getUiComponent("userName").requestFocus();
-                    return;
+                if (weightBeginBtn.isEnabled()) {
+                    // 权限检查
+                    if (!weightContext.isLogin()) {
+                        JOptionPane.showMessageDialog(null, "请先登录");
+                        weightContext.getUiComponent("userName").requestFocus();
+                        return;
+                    }
+                    weightBeginBtn.setEnabled(false);
+                    weightEndBtn.setEnabled(true);
                 }
-                weightBeginBtn.setEnabled(false);
-                weightEndBtn.setEnabled(true);
             }
         });
 
         weightEndBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // 权限检查
-                if (!weightContext.isLogin()) {
-                    JOptionPane.showMessageDialog(null, "请先登录");
-                    weightContext.getUiComponent("userName").requestFocus();
-                    return;
+                if (weightEndBtn.isEnabled()) {
+                    // 权限检查
+                    if (!weightContext.isLogin()) {
+                        JOptionPane.showMessageDialog(null, "请先登录");
+                        weightContext.getUiComponent("userName").requestFocus();
+                        return;
+                    }
+                    weightBeginBtn.setEnabled(true);
+                    weightEndBtn.setEnabled(false);
+                    weightReset();
+                    // begin 称重放行结束的同时也将扫描放行处的数据给重置
+                    scanBeginBtn.setEnabled(true);
+                    scanEndBtn.setEnabled(false);
+                    scanReset();
+                    // end 称重放行结束的同时也将扫描放行处的数据给重置
+                    weightContext.syncTrigger();
                 }
-                weightBeginBtn.setEnabled(true);
-                weightEndBtn.setEnabled(false);
-                weightReset();
-                // begin 称重放行结束的同时也将扫描放行处的数据给重置
-                scanBeginBtn.setEnabled(true);
-                scanEndBtn.setEnabled(false);
-                scanReset();
-                // end 称重放行结束的同时也将扫描放行处的数据给重置
-                weightContext.syncTrigger();
             }
         });
 
         scanBeginBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // 权限检查
-                if (!weightContext.isLogin()) {
-                    JOptionPane.showMessageDialog(null, "请先登录");
-                    weightContext.getUiComponent("userName").requestFocus();
-                    return;
+                if (scanBeginBtn.isEnabled()) {
+                    // 权限检查
+                    if (!weightContext.isLogin()) {
+                        JOptionPane.showMessageDialog(null, "请先登录");
+                        weightContext.getUiComponent("userName").requestFocus();
+                        return;
+                    }
+                    scanBeginBtn.setEnabled(false);
+                    scanEndBtn.setEnabled(true);
                 }
-                scanBeginBtn.setEnabled(false);
-                scanEndBtn.setEnabled(true);
             }
         });
 
         scanEndBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // 权限检查
-                if (!weightContext.isLogin()) {
-                    JOptionPane.showMessageDialog(null, "请先登录");
-                    weightContext.getUiComponent("userName").requestFocus();
-                    return;
+                if (scanEndBtn.isEnabled()) {
+                    // 权限检查
+                    if (!weightContext.isLogin()) {
+                        JOptionPane.showMessageDialog(null, "请先登录");
+                        weightContext.getUiComponent("userName").requestFocus();
+                        return;
+                    }
+                    scanBeginBtn.setEnabled(true);
+                    scanEndBtn.setEnabled(false);
+                    scanReset();
+                    weightContext.syncTrigger();
                 }
-                scanBeginBtn.setEnabled(true);
-                scanEndBtn.setEnabled(false);
-                scanReset();
-                weightContext.syncTrigger();
             }
         });
     }

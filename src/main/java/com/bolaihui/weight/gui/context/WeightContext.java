@@ -636,7 +636,7 @@ public class WeightContext {
 
                 if (dupScanList != null && dupScanList.size() > 0) {
                     content += "☆☆☆==发现重复扫描==☆☆☆\n";
-                    for(int i=0; i<dupScanList.size(); i++) {
+                    for (int i=0; i<dupScanList.size(); i++) {
                         Map dupScan = (Map) dupScanList.get(i);
                         String emsNo = dupScan.get("dupEmsNo").toString();
                         String originalLocation = dupScan.get("originalLocation").toString();

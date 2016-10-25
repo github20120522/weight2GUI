@@ -44,12 +44,12 @@ public class WeightContext {
             enableBoxNo = properties.get("enableBoxNo").toString();
             aesKey = properties.get("aesKey").toString();
 
-            basePath = properties.get("basePath").toString();
+            String basePath = properties.get("basePath").toString();
             downloadOutDataUrl = basePath + properties.get("downloadOutDataUrl").toString();
             // uploadWeightDataUrl = basePath + properties.get("uploadWeightDataUrl").toString();
-            loginCheckUrl = basePath + properties.getProperty("loginCheckUrl").toString();
-            syncDataUrl = basePath + properties.getProperty("syncDataUrl").toString();
-            exportReleaseDataUrl = basePath + properties.getProperty("exportReleaseDataUrl").toString();
+            loginCheckUrl = basePath + properties.getProperty("loginCheckUrl");
+            syncDataUrl = basePath + properties.getProperty("syncDataUrl");
+            exportReleaseDataUrl = basePath + properties.getProperty("exportReleaseDataUrl");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -68,8 +68,6 @@ public class WeightContext {
     private boolean isLogin;
 
     private boolean isConnected = false;
-
-    private String basePath;
 
     private String downloadOutDataUrl;
 
@@ -145,7 +143,7 @@ public class WeightContext {
         this.enableBoxNo = enableBoxNo;
     }
 
-    public Map<String, Object> getWaitOutDataMap() {
+    private Map<String, Object> getWaitOutDataMap() {
         return waitOutDataMap;
     }
 
@@ -159,10 +157,6 @@ public class WeightContext {
 
     public boolean isLogin() {
         return isLogin;
-    }
-
-    public String getRealName() {
-        return realName;
     }
 
     public boolean isConnected() {
@@ -202,7 +196,7 @@ public class WeightContext {
     }
 
     /* 判断当前是否可以称重，即需要输入的必要信息和重量都以具备 */
-    public boolean ok4weight() {
+    private boolean ok4weight() {
 
         boolean ok = false;
         // done 需要注意纸箱条码的判断
@@ -400,7 +394,7 @@ public class WeightContext {
     }
 
     /* 获取运单的出区状态 */
-    public String getEmsNoStatus(String emsNo) {
+    private String getEmsNoStatus(String emsNo) {
 
         String resultStatus = "无";
         if (!waitOutDataMap.isEmpty() && waitOutDataMap.get(emsNo) != null) {
@@ -413,7 +407,8 @@ public class WeightContext {
     }
 
     /* 下载放行数据 */
-    public void downloadOutData() throws IOException {
+    @SuppressWarnings("unchecked")
+    private void downloadOutData() throws IOException {
 
         JLabel refreshTime = (JLabel) weightContext.getUiComponent("refreshTime");
         Map<String, Object> params = new HashMap<>();
@@ -425,9 +420,7 @@ public class WeightContext {
         String resultStr = HttpUtil.httpPost(downloadOutDataUrl, headers, params);
         // key: emsNo, value: 放行状态
         if (StringUtils.isNotBlank(resultStr)) {
-            synchronized (waitOutDataMap) {
-                waitOutDataMap = BaseUtil.parseJson(resultStr, Map.class);
-            }
+            waitOutDataMap = BaseUtil.parseJson(resultStr, Map.class);
         } else {
             refreshTime.setText("刷新出错");
             refreshTime.setForeground(Color.RED);
@@ -566,7 +559,8 @@ public class WeightContext {
     }
 
     /* 同步数据 */
-    public void syncData(String weightJson, String outDataJson, String notOutDataJson) throws IOException {
+    @SuppressWarnings("unchecked")
+    private void syncData(String weightJson, String outDataJson, String notOutDataJson) throws IOException {
 
         Map<String, Object> result;
         Date today = new Date();
@@ -607,10 +601,10 @@ public class WeightContext {
                 weightContext.getScanDataList().removeAllElements();
                 ((JList) weightContext.getUiComponent("scanList")).updateUI();
                 if (weightFile.exists()) {
-                    weightFile.delete();
+                    FileUtils.deleteQuietly(weightFile);
                 }
                 if (outDataFile.exists()) {
-                    outDataFile.delete();
+                    FileUtils.deleteQuietly(outDataFile);
                 }
                 refreshDownloadOutData();
 
@@ -626,8 +620,8 @@ public class WeightContext {
 
                 if (warningMessageList != null && warningMessageList.size() > 0) {
                     content += "★★★〓〓发现退删单，请注意拣出〓〓★★★\n";
-                    for (int i=0; i<warningMessageList.size(); i++) {
-                        String warningMessage = warningMessageList.get(i).toString();
+                    for (Object aWarningMessageList : warningMessageList) {
+                        String warningMessage = aWarningMessageList.toString();
                         content += warningMessage + "\n";
                     }
                 }
@@ -636,8 +630,8 @@ public class WeightContext {
 
                 if (dupScanList != null && dupScanList.size() > 0) {
                     content += "☆☆☆==发现重复扫描==☆☆☆\n";
-                    for (int i=0; i<dupScanList.size(); i++) {
-                        Map dupScan = (Map) dupScanList.get(i);
+                    for (Object aDupScanList : dupScanList) {
+                        Map dupScan = (Map) aDupScanList;
                         String emsNo = dupScan.get("dupEmsNo").toString();
                         String originalLocation = dupScan.get("originalLocation").toString();
                         String originalOperator = dupScan.get("originalOperator").toString();
@@ -662,6 +656,7 @@ public class WeightContext {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void exportReleaseData() {
 
         try {
@@ -688,7 +683,8 @@ public class WeightContext {
         }
     }
 
-    public void buildExportFile(List dataList) {
+    @SuppressWarnings("unchecked")
+    private void buildExportFile(List dataList) {
         FileOutputStream fos = null;
         try {
             Date today = new Date();
@@ -761,7 +757,8 @@ public class WeightContext {
     }
 
     /* 登录、退出 */
-    public void loginLogOut(boolean isIn) {
+    @SuppressWarnings("unchecked")
+    private void loginLogOut(boolean isIn) {
 
         try {
             if (isIn) {
@@ -825,7 +822,7 @@ public class WeightContext {
         }
     }
 
-    public void sound(boolean success, boolean dup) {
+    private void sound(boolean success, boolean dup) {
 
         if (dup) {
             InputStream dupSoundStream = this.getClass().getClassLoader().getResourceAsStream("dup.wav");

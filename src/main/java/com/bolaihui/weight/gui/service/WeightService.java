@@ -24,8 +24,6 @@ public class WeightService implements SerialPortEventListener, Runnable {
 
     private BufferedInputStream inputStream;
 
-    private CommPortIdentifier commPort;
-
     private SerialPort serialPort;
 
     private WeightContext weightContext = WeightContext.getInstance();
@@ -52,8 +50,7 @@ public class WeightService implements SerialPortEventListener, Runnable {
         while (en.hasMoreElements()) {
             commPortIdentifier = (CommPortIdentifier) en.nextElement();
             if (commPortIdentifier.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-                commPort = commPortIdentifier;
-                serialPort = (SerialPort) commPort.open("称重端口", 5000);
+                serialPort = (SerialPort) commPortIdentifier.open("称重端口", 5000);
                 isOpened = true;
                 break;
             }
@@ -165,7 +162,7 @@ public class WeightService implements SerialPortEventListener, Runnable {
 
         Thread.sleep(5);
         // 等待完整的称重数据
-        byte[] readBuffer = new byte[1024];
+        byte[] readBuffer = new byte[256];
         if (inputStream.available() >= 18) {
             while (inputStream.available() > 0) {
                 inputStream.read(readBuffer);
@@ -201,7 +198,7 @@ public class WeightService implements SerialPortEventListener, Runnable {
         // done 显示当前重量
         BigDecimal weight = new BigDecimal(weightValue.replace("+", "").replace("-", "").trim());
         if (StringUtils.equals("g", unitStr.trim())) {
-            weight = weight.divide(new BigDecimal(1000));
+            weight = weight.divide(new BigDecimal(1000), BigDecimal.ROUND_HALF_UP);
         }
         weight = weight.setScale(4, BigDecimal.ROUND_HALF_UP);
         ((JLabel) weightContext.getUiComponent("weightLabel")).setText(weight + "kg");

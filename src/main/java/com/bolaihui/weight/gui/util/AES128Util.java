@@ -51,7 +51,7 @@ public class AES128Util {
 
     private static SecretKeySpec getAESSecretKey(String base64KeyWord) throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
-        // 防止linux下 随机生成key
+        // 防止linux下随机生成key
         SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
         secureRandom.setSeed(Base64.decodeBase64(base64KeyWord));
         // 根据密钥初始化密钥生成器
@@ -63,9 +63,8 @@ public class AES128Util {
     public static void main(String[] args) throws UnsupportedEncodingException {
 
         String keyWord = "today_is_a_sunny_day";
-        byte[] base64KeyBytes = Base64.encodeBase64(keyWord.getBytes(DEFAULT_CHARSET));
-        String base64KeyWord = new String(base64KeyBytes, DEFAULT_CHARSET);
-        String content = "122qw";
+        String base64KeyWord = Base64.encodeBase64String(keyWord.getBytes());
+        String content = "abc";
 
         System.out.println("加密密钥：" + base64KeyWord);
         System.out.println("加密前内容：" + content);

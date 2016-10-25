@@ -38,8 +38,7 @@ public class BaseUtil {
             sw = new StringWriter();
             pw = new PrintWriter(sw, true);
             e.printStackTrace(pw);
-            String str = sw.toString();
-            return str;
+            return sw.toString();
         } finally {
             try {
                 if (sw != null)
